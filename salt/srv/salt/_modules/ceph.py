@@ -343,6 +343,28 @@ def rbd_command(command_args, pool_name=None):
     }
 
 
+def rados_command(command_args):
+    """
+    Run a rados CLI operation directly.  This is a fallback to allow
+    manual execution of arbitrary commands in case the user wants to
+    do something that is absent or broken in Calamari proper.
+
+    :param command_args: Command line, excluding the leading 'rados' part.
+    """
+
+    args = ["rados"] + command_args
+
+    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    status = p.returncode
+
+    return {
+        'out': stdout,
+        'err': stderr,
+        'status': status
+    }
+
+
 def radosgw_admin_command(command_args):
     """
     Run a radosgw-admin CLI operation directly.  This is a fallback to allow

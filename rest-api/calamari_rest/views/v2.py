@@ -1050,7 +1050,7 @@ useful to show users data from the /status sub-url, which returns the
 
 class CliViewSet(RemoteViewSet):
     """
-Access the `ceph`, `rbd`, and `radosgw-admin` CLI tools remotely.
+Access the `ceph`, `rbd`, rados and `radosgw-admin` CLI tools remotely.
 
 To achieve the same result as running "ceph osd dump" at a shell, an
 API consumer may POST an object in either of the following formats:
@@ -1098,6 +1098,9 @@ not a problem.
             elif principle == 'rbd':
                 command.pop(0)
                 result = self.run_mon_job(fsid, "ceph.rbd_command", [command])
+            elif principle == 'rados':
+                command.pop(0)
+                result = self.run_mon_job(fsid, "ceph.rados_command", [command])
             elif principle == 'radosgw-admin':
                 raise APIException("radosgw-admin calls are not yet supported %s" % str(result))
             else:
