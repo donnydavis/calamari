@@ -75,6 +75,9 @@ urlpatterns = patterns(
                                                     'patch': 'update',
                                                     'delete': 'destroy'}),
         name='cluster-pool-detail'),
+    url(r'^cluster/(?P<fsid>[a-zA-Z0-9-]+)/pool/(?P<pool_id>\d+)/stats$',
+        calamari_rest.views.v2.RadosViewSet.as_view({'get': 'pool_stats'}),
+        name='cluster-pool-stats'),
 
     url(r'^cluster/(?P<fsid>[a-zA-Z0-9-]+)/osd$',
         calamari_rest.views.v2.OsdViewSet.as_view({'get': 'list'}),
@@ -142,5 +145,13 @@ urlpatterns = patterns(
 
     # Ceph CLI access
     url(r'^cluster/(?P<fsid>[a-zA-Z0-9-]+)/cli$',
-        calamari_rest.views.v2.CliViewSet.as_view({'post': 'create'}))
+        calamari_rest.views.v2.CliViewSet.as_view({'post': 'create'})),
+
+    # Access to global rados statistics
+    url(r'^cluster/(?P<fsid>[a-zA-Z0-9-]+)/stats$',
+        calamari_rest.views.v2.RadosViewSet.as_view({'get': 'global_stats'})),
+
+    # Access to full rados statistics
+    url(r'^cluster/(?P<fsid>[a-zA-Z0-9-]+)/rados$',
+        calamari_rest.views.v2.RadosViewSet.as_view({'get': 'retrieve'})),
 )

@@ -1207,3 +1207,24 @@ not a problem.
             raise APIException("Remote error: %s" % str(result))
 
         return Response(self.serializer_class(DataObject(result)).data)
+
+
+class RadosViewSet(RemoteViewSet):
+    """
+Allows retrieval of rados data usage statistics
+    """
+
+    def retrieve(self, request, fsid):
+        name = self.client.get_cluster(fsid)['name']
+        result = self.run_mon_job(fsid, "ceph.rados_stats", [name])
+        return Response(result)
+
+    def pool_stats(self, request, fsid, pool):
+        name = self.client.get_cluster(fsid)['name']
+        result = self.run_mon_job(fsid, "ceph.rados_stats", [name])
+        return Response(result)
+
+    def global_stats(self, request, fsid):
+        name = self.client.get_cluster(fsid)['name']
+        result = self.run_mon_job(fsid, "ceph.rados_stats", [name])
+        return Response(result)
