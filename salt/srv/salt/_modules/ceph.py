@@ -707,3 +707,22 @@ def heartbeat():
         # once the issue is fixed upstream and we are using a more
         # recent salt in calamari.
         pass
+
+def rados_stats(cluster_name):
+        import rados
+
+        cluster = rados.Rados(name=RADOS_NAME, clustername=cluster_name, conffile='')
+        cluster.connect()
+
+        result = cluster.get_cluster_stats()
+        result['pools'] = []
+
+        pools = cluster.list_pools()
+
+        for pool in pools:
+            stats = cluster.open_ioctx(pool).get_stats()
+            stats['name'] = pool
+            stats['id'] = cluster.pool_lookup(pool)
+            result['pools'].append(stats)
+
+        return result
